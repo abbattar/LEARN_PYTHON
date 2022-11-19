@@ -2,5 +2,6 @@ import menu
 
 
 def run():
-    menu.menu()
+    while True:
+        menu.menu()
 
