@@ -74,8 +74,7 @@ def book_title():
 def delete_all():
     print('*' * 35)
     print('\tУДАЛЕНИЕ ВСЕХ КОНТАКТОВ')
-    with open(path, 'w', encoding='utf-8') as f:
-        f.write('')
+    open(path, 'w', encoding='utf-8').close()
     book_title()
     print('Все контакты удалены.')
     yes_or_no = input('Если желаете добавить новый контакт - нажмите Enter. Любая другая клавиша - закрытие программы.')
