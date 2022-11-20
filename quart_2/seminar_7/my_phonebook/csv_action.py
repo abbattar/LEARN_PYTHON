@@ -1,10 +1,12 @@
+import os
 import sys
+import random
+from random import randint
 
 path = 'phonebook.csv'
 
 
 def counter_lines():
-    count = 0
     with open(path, 'r', encoding='utf-8') as f:
         return str(len(f.readlines()))
 
@@ -12,7 +14,6 @@ def counter_lines():
 def generate_fake_contact():
     print('*' * 35)
     print('\tГЕНЕРАЦИЯ КОНТАКТОВ ДЛЯ ОЗНАКОМЛЕНИЯ С ПРОГРАММОЙ')
-    from random import randintб choice
     import datetime
 
     for _ in range(30):
@@ -47,7 +48,6 @@ def add_new_contact():
 
 def view_csv():
     print('*' * 35)
-    import os
     if os.path.isfile(path):
         print('\tПРОСМОТР ВСЕХ КОНТАКТОВ')
         if int(counter_lines()) < 2:

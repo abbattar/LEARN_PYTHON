@@ -1,4 +1,5 @@
 import csv_action as ca
+import sys
 
 
 def menu():
@@ -25,4 +26,3 @@ def menu():
         sys.exit()
     else:
         print('Что-то пошло не так. Повторите ввод!')
-
