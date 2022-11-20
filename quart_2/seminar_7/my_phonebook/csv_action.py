@@ -28,6 +28,8 @@ def generate_fake_contact():
             line = ';'.join(u_data)
             f.write(counter_lines() + ';' + line + '\n')
 
+    print('Сгенерировано 30 фейковых аккаунтов.')
+
 
 def add_new_contact():
     print('*' * 35)
@@ -43,7 +45,8 @@ def add_new_contact():
         line = ';'.join(u_data)
         f.write(counter_lines() + ';' + line + '\n')
         print('*' * 35)
-        print('Новый контакт добавлен в справочник.')
+
+    print('Новый контакт добавлен в справочник.')
 
 
 def view_csv():
@@ -51,13 +54,13 @@ def view_csv():
     if os.path.isfile(path):
         print('\tПРОСМОТР ВСЕХ КОНТАКТОВ')
         if int(counter_lines()) < 2:
-            print('В справочнике нет контактов')
+            print('В справочнике нет контактов.')
         else:
             with open(path, 'r', encoding='utf-8') as f:
                 for line in f:
                     print(line, end='')
     else:
-        print('В справочнике нет контактов')
+        print('В справочнике нет контактов.')
         book_title()
 
 

@@ -3,7 +3,7 @@ import sys
 
 
 def menu():
-    choice = input(
+    choice = str(input(
         f'{"*" * 50}\n'
         '\t\tСПИСОК ДЕЙСТВИЙ:\n'
         '\t1. Показать все контакты\n'
@@ -12,17 +12,17 @@ def menu():
         '\t4. Удалить все контакты\n'
         '\t5. Закрыть программу\n'
         f'{"*" * 50}\n'
-        '\tВведите номер действия и нажмите Enter: ')
+        '\tВведите номер действия и нажмите Enter: '))
 
-    if choice == 1:
+    if choice == '1':
         ca.view_csv()
-    elif choice == 2:
+    elif choice == '2':
         ca.generate_fake_contact()
-    elif choice == 3:
+    elif choice == '3':
         ca.add_new_contact()
-    elif choice == 4:
+    elif choice == '4':
         ca.delete_all()
-    elif choice == 5:
-        sys.exit()
+    elif choice == '5':
+        sys.exit('Программа закрыта. Всего доброго!')
     else:
         print('Что-то пошло не так. Повторите ввод!')
