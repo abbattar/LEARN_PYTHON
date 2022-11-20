@@ -12,8 +12,7 @@ def counter_lines():
 def generate_fake_contact():
     print('*' * 35)
     print('\tГЕНЕРАЦИЯ КОНТАКТОВ ДЛЯ ОЗНАКОМЛЕНИЯ С ПРОГРАММОЙ')
-    import random
-    from random import randint
+    from random import randintб choice
     import datetime
 
     for _ in range(30):
