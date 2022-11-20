@@ -6,9 +6,7 @@ path = 'phonebook.csv'
 def counter_lines():
     count = 0
     with open(path, 'r', encoding='utf-8') as f:
-        for line in f:
-            count += 1
-    return str(count)
+        return str(len(f.readlines()))
 
 
 def generate_fake_contact():
