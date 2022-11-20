@@ -1,7 +1,7 @@
 import os
-import sys
 import random
 from random import randint
+import menu
 
 path = 'phonebook.csv'
 
@@ -74,8 +74,9 @@ def delete_all():
     open(path, 'w', encoding='utf-8').close()
     book_title()
     print('Все контакты удалены.')
-    yes_or_no = input('Если желаете добавить новый контакт - нажмите Enter. Любая другая клавиша - закрытие программы.')
+    yes_or_no = input('Если желаете добавить новый контакт - нажмите Enter.\n'
+                      'Для возврата в меню введите любой символ и нажмите Enter: ')
     if yes_or_no == '':
         add_new_contact()
     else:
-        sys.exit()
+        menu.menu()
