@@ -4,7 +4,7 @@ from sqlite3 import Error
 path = 'bd.sqlite'
 
 
-def create():
+def create():  # создаем пустую базу
     connection = None
 
     try:
