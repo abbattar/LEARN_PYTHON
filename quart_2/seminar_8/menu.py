@@ -19,17 +19,17 @@ def menu():
         '\tВведите номер действия и нажмите Enter: '))
 
     if choice == '1':
-        conn.view_database() # это надо сделать
+        conn.view_users()  # СДЕЛАНО
     elif choice == '2':
-        conn.create()  # пока готово только создание таблицы
+        conn.create()  # СДЕЛАНО
     elif choice == '3':
-        conn.add_new_contact() # это надо сделать
+        conn.add_user()  # СДЕЛАНО
     elif choice == '4':
-        conn.edit_contact() # это надо сделать
+        conn.edit_contact()  # это надо сделать
     elif choice == '5':
-        conn.delete_contact() # это надо сделать
+        conn.delete_contact()  # это надо сделать
     elif choice == '6':
-        conn.delete_all()# это надо сделать
+        conn.delete_all()  # это надо сделать
     elif choice == '7':
         sys.exit('Программа закрыта. Всего доброго!')
     else:
