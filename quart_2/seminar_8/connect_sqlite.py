@@ -36,8 +36,8 @@ def view_users():
     with connection:
         data = connection.execute("SELECT * FROM USERS")
 
-    for row in data:
-        print(row)
+        for row in data:
+            print(row)
 
 
 def add_user():
@@ -47,11 +47,11 @@ def add_user():
     except Error as e:
         print(f"Произошла ошибка '{e}'")
 
-    sql = 'INSERT INTO USERS (id, name, age, gender) values(?, ?, ?, ?)'
+    sql = 'INSERT INTO USERS (name, age, gender) values(?, ?, ?)'
     data = [
-        ('1', 'Алиса', 21, 'female'),
-        ('2', 'Bob', 22, 'male'),
-        ('3', 'Chris', 23, 'male')
+        ('Алиса', 21, 'female'),
+        ('Bob', 22, 'male'),
+        ('Chris', 23, 'male')
     ]
 
     with connection:

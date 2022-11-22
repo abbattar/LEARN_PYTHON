@@ -2,6 +2,11 @@ import connect_sqlite as conn
 import sys
 
 
+def run():
+    while True:
+        menu()
+
+
 def menu():
     choice = str(input(
         f'{"*" * 50}\n'
@@ -23,7 +28,7 @@ def menu():
     elif choice == '3':
         conn.add_user()  # СДЕЛАНО
     elif choice == '4':
-        conn.edit_user()  # это надо сделать
+        conn.edit_user()  # СДЕЛАНО
     elif choice == '5':
         conn.delete_user()  # СДЕЛАНО
     elif choice == '6':
