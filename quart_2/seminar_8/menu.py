@@ -11,29 +11,32 @@ def menu():
     choice = str(input(
         f'{"*" * 50}\n'
         '\t\tСПИСОК ДЕЙСТВИЙ:\n'
-        '\t1. Показать всех сотрудников\n'
-        '\t2. Создать пустую БД\n'
-        '\t3. Добавить сотрудников\n'
-        '\t4. Отредактировать сотрудника\n'
-        '\t5. Удалить сотрудника\n'
-        '\t6. Очистить БД\n'
-        '\t7. Закрыть программу\n'
+        '\t1. Создать пустую БД\n'
+        '\t2. Сгенерировать сотрудников\n'
+        '\t3. Показать всех сотрудников\n'
+        '\t4. Добавить сотрудника\n'
+        '\t5. Отредактировать сотрудника\n'
+        '\t6. Удалить сотрудника\n'
+        '\t7. Очистить БД\n'
+        '\t8. Закрыть программу\n'
         f'{"*" * 50}\n'
         '\tВведите номер действия и нажмите Enter: '))
 
     if choice == '1':
-        conn.view_users()  # СДЕЛАНО
+        conn.create()
     elif choice == '2':
-        conn.create()  # СДЕЛАНО
+        conn.generation_users()
     elif choice == '3':
-        conn.add_user()  # СДЕЛАНО
+        conn.view_users()
     elif choice == '4':
-        conn.edit_user()  # СДЕЛАНО
+        conn.add_user()
     elif choice == '5':
-        conn.delete_user()  # СДЕЛАНО
+        conn.edit_user()
     elif choice == '6':
-        conn.delete_all()  # СДЕЛАНО
+        conn.delete_user()
     elif choice == '7':
-        sys.exit('Программа закрыта. Всего доброго!')
+        conn.delete_all()
+    elif choice == '8':
+        sys.exit('Программа закрыта. Всего ВАМ ДО! БРО! ГО! )))')
     else:
         print('Что-то пошло не так. Повторите ввод!')

@@ -22,25 +22,10 @@ def create():
 
     with connection:
         connection.execute(create_users_table)
-
-    view_users()
-
-
-def view_users():
-    connection = None
-    try:
-        connection = sl.connect(path)
-    except Error as e:
-        print(f"Произошла ошибка '{e}'")
-
-    with connection:
-        data = connection.execute("SELECT * FROM USERS")
-
-        for row in data:
-            print(row)
+        print(f'{"*" * 50}\n\tТАБЛИЦА В БД СОЗДАНА')
 
 
-def add_user():
+def generation_users():
     connection = None
     try:
         connection = sl.connect(path)
@@ -56,14 +41,10 @@ def add_user():
 
     with connection:
         connection.executemany(sql, data)
-        print('Данные добавлены:')
-
-    view_users()
+        print(f'{"*" * 50}\n\tДАННЫЕ ДОБАВЛЕНЫ')
 
 
-def delete_user():
-    user_id = int(input('Введите ID сотрудника для удаления: '))
-
+def view_users():
     connection = None
     try:
         connection = sl.connect(path)
@@ -71,30 +52,36 @@ def delete_user():
         print(f"Произошла ошибка '{e}'")
 
     with connection:
-        connection.execute(f"DELETE FROM USERS WHERE ID = {user_id}")
+        data = connection.execute("SELECT * FROM USERS")
+        cur = connection.cursor()
+        exist = cur.fetchone()
+        if exist is None:
+            print(f'{"*" * 50}\n\tПРОСМОТР СОТРУДНИКОВ')
+            for row in data:
+                print(row)
+        else:
+            print('БД не содержит записей.')
 
-        print(f'Сотрудник с ID={user_id} удален из базы данных.')
 
-    view_users()
-
-
-def delete_all():
+def add_user():
     connection = None
     try:
         connection = sl.connect(path)
-        print("Подключение к базе данных SQLite прошло успешно.")
-
     except Error as e:
         print(f"Произошла ошибка '{e}'")
 
     with connection:
-        connection.execute("DELETE FROM USERS")
+        print(f'{"*" * 50}\n\tДОБАВЛЕНИЕ СОТРУДНИКА')
+        name = input('Имя: ')
+        age = input('Возраст: ')
+        gender = input('Пол: ')
+        connection.execute(f"INSERT INTO USERS (NAME, AGE, GENDER) VALUES('{name}', '{age}', '{gender}')")
 
+    print('Данные добавлены.')
     view_users()
 
 
 def edit_user():
-    user_id = int(input('Введите ID сотрудника для редактирования: '))
 
     connection = None
     try:
@@ -103,6 +90,9 @@ def edit_user():
         print(f"Произошла ошибка '{e}'")
 
     with connection:
+        print(f'{"*" * 50}\n\tРЕДАКТИРОВАНИЕ ИНФОРМАЦИИ О СОТРУДНИКЕ')
+        user_id = int(input('Введите ID сотрудника для редактирования: '))
+
         data = connection.execute(f"SELECT * FROM USERS WHERE ID = {user_id}")
         for row in data:
             if len(row) == 0:
@@ -131,7 +121,36 @@ def edit_user():
 
         data = connection.execute(f"SELECT * FROM USERS WHERE ID = {user_id}")
         for row in data:
-            if len(row) == 0:
-                print('В базе данных не найдено.')
-            else:
-                print(f'Данные сотрудника с ID = {user_id}:\n{row}')
+            print(f'Данные сотрудника с ID = {user_id}:\n{row}')
+
+
+def delete_user():
+    print(f'{"*" * 50}\n\tУДАЛЕНИЕ СОТРУДНИКА ИЗ БД')
+    user_id = int(input('Введите ID сотрудника для удаления: '))
+
+    connection = None
+    try:
+        connection = sl.connect(path)
+    except Error as e:
+        print(f"Произошла ошибка '{e}'")
+
+    with connection:
+        connection.execute(f"DELETE FROM USERS WHERE ID = {user_id}")
+
+        print(f'Сотрудник с ID={user_id} удален из базы данных.')
+
+
+def delete_all():
+    connection = None
+    try:
+        connection = sl.connect(path)
+        print("Подключение к базе данных SQLite прошло успешно.")
+
+    except Error as e:
+        print(f"Произошла ошибка '{e}'")
+
+    with connection:
+        print(f'{"*" * 50}\n\tОЧИСТКА БД')
+        connection.execute("DELETE FROM USERS")
+
+    view_users()
