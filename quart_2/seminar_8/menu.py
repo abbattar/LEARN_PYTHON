@@ -1,4 +1,5 @@
 import connect_sqlite as conn
+import logger as lg
 import sys
 
 
@@ -37,6 +38,7 @@ def menu():
     elif choice == '7':
         conn.delete_all()
     elif choice == '8':
+        lg.logging.info('Программа закрыта. Всего ВАМ ДО! БРО! ГО! )))')
         sys.exit('Программа закрыта. Всего ВАМ ДО! БРО! ГО! )))')
     else:
         print('Что-то пошло не так. Повторите ввод!')
