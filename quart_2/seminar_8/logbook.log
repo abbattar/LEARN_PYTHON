@@ -1,0 +1,3 @@
+[24.11.2022 09:16:25 ] [INFO] [main] [<module>: 4] => Start
+[24.11.2022 09:16:35 ] [INFO] [connect_sqlite] [generation_users: 52] => Генерация пользователей
+[24.11.2022 09:17:42 ] [INFO] [main] [<module>: 4] => Start

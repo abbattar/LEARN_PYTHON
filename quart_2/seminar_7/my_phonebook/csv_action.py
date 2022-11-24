@@ -5,7 +5,6 @@ import menu
 
 path = 'phonebook.csv'
 
-
 def counter_lines():
     with open(path, 'r', encoding='utf-8') as f:
         return str(len(f.readlines()))
@@ -17,10 +16,10 @@ def generate_fake_contact():
     import datetime
 
     for _ in range(30):
-        name = random.choice(open('fake_data\_names.txt', encoding='utf-8').readlines()).strip()
-        surname = random.choice(open('fake_data\surnames.txt', encoding='utf-8').readlines()).strip()
+        name = random.choice(open(r'fake_data\names.txt', encoding='utf-8').readlines()).strip()
+        surname = random.choice(open(r'fake_data\surnames.txt', encoding='utf-8').readlines()).strip()
         birthday = datetime.date(randint(1950, 2000), randint(1, 12), randint(1, 28)).strftime("%d.%m.%Y")
-        work = random.choice(open('fake_data\companies.txt', encoding='utf-8').readlines()).strip()
+        work = random.choice(open(r'fake_data\companies.txt', encoding='utf-8').readlines()).strip()
         phonenum = '+' + str(random.randint(79000000000, 80000000000))
         u_data = [name, surname, birthday, work, phonenum]
 
@@ -29,7 +28,6 @@ def generate_fake_contact():
             f.write(counter_lines() + ';' + line + '\n')
 
     print('Сгенерировано 30 фейковых аккаунтов.')
-
 
 def add_new_contact():
     print('*' * 35)
