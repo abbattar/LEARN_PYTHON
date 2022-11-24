@@ -1,10 +1,11 @@
+import datetime
 import sqlite3 as sl
 import logger as lg
 import csv
 import db_action
-from dateutil.parser import parse   # pip install python-dateutil
-import sys
-import os
+# from dateutil.parser import parse   # pip install python-dateutil
+# import sys
+# import os
 
 path = 'phonebook.csv'
 con = sl.connect('./phonebook.db')
@@ -80,35 +81,36 @@ def view_users():
     print(f'{"*" * 50}\n\tПРОСМОТР СОТРУДНИКОВ:')
 
     db_connect()
-    global con
+
     with con:
         data = con.execute("SELECT * FROM ID")
 
     for row in data:
         print(row)
-    
+
     con.close()
-    
-def birth_date():
-    try:
-        value = parse(input('День рожденья: '))
-    except ValueError:
-        sys.exit('Пиши нормальное представление даты: ГГ-ММ-ДД')
+
+# def birth_date():
+#     try:
+#         value = parse(input('День рожденья: '))
+#     except ValueError:
+#         sys.exit('Пиши нормальное представление даты: ГГ-ММ-ДД')
         
-    return value
+#     return value
 
 
 def add_user():
     lg.logging.info('добавление юзера')
     
     db_connect()
-
+    dr = datetime()
+    
     print(f'{"*" * 50}\n\tДОБАВЛЕНИЕ СОТРУДНИКА')
     id_user = int(input('Идентификационный номер: '))
     name = input('Имя: ')
     surname = input('Фамилия: ')
     workplace = input('Место работы: ')
-    birthday = birth_date()
+    birthday = str(input(f'ДР: {dr}'))
     phonenum = int(input('Номер телефона: '))
 
     with con:
