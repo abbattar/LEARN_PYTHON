@@ -1,91 +1,124 @@
 import sqlite3 as sl
 import logger as lg
+import csv
+import db_action
+from dateutil.parser import parse   # pip install python-dateutil
+import sys
+import os
 
-path = 'bd.sqlite'
+path = 'phonebook.csv'
+con = sl.connect('./phonebook.db')
+cur = con.cursor()
+# print(type(cur))
 
-connection = None
-
+def initial():
+    global con
+    global cur
 
 def db_connect():
-    global connection
 
     try:
-        connection = sl.connect(path)
+        con
     except sl.Error as e:
         print(f'Произошла ошибка: {e}')
-
+        con.close()
 
 def create():
-    lg.logging.info('создание таблицы в бд')
-
+    lg.logging.info('Cоздание таблицы в бд')
     db_connect()
 
     create_users_table = """
     CREATE TABLE IF NOT EXISTS USERS (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
-      age INTEGER,
-      gender TEXT
-    );
+      surname TEXT NOT NULL,
+      birthday DATE NOT NULL,
+      workplace TEXT NOT NULL,
+      phonenum INTEGER,
+    )
     """
 
-    with connection:
-        connection.execute(create_users_table)
+    with con:
+        con.execute(create_users_table)
 
-    connection.commit()
+    con.commit()
 
     print(f'{"*" * 50}\n\tТАБЛИЦА В БД СОЗДАНА')
 
 
 def generation_users():
-    lg.logging.info('генерация юзеров')
 
+    lg.logging.info('Генерация пользователей')
     db_connect()
+    cur.execute("""CREATE TABLE IF NOT EXISTS USERS
+    ( id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      surname TEXT NOT NULL,
+      birthday DATE NOT NULL,
+      workplace TEXT NOT NULL,
+      phonenum INTEGER,
+    )""")
 
-    sql = 'INSERT INTO USERS (name, age, gender) values(?, ?, ?)'
-    data = [
-        ('Алиса', 21, 'female'),
-        ('Bob', 22, 'male'),
-        ('Chris', 23, 'male')
-    ]
+    db_action.generate_fake_contact()
 
-    with connection:
-        connection.executemany(sql, data)
+    with open(path,'a', encoding="utf8") as phone:
+        dr = csv.reader(phone, delimiter=";")
+        to_db = [(i['ID'], i['ИМЯ'], i['ФАМИЛИЯ'],
+                   i['ДАТА РОЖДЕНИЯ'], i['МЕСТО РАБОТЫ'], i['НОМЕРА ТЕЛЕФОНОВ']) for i in dr]
+    cur.executemany("INSERT INTO t (ID, name, surname, birthday, workplace, phonenum) VALUES (?, ?, ?, ?, ?, ?);", to_db)
 
-    connection.commit()
+    con.commit()
 
     print(f'{"*" * 50}\n\tДАННЫЕ ДОБАВЛЕНЫ')
+    
+    con.close()
 
 
 def view_users():
     lg.logging.info('просмотр юзеров')
+
     print(f'{"*" * 50}\n\tПРОСМОТР СОТРУДНИКОВ:')
 
     db_connect()
-
-    with connection:
-        data = connection.execute("SELECT * FROM USERS")
+    global con
+    with con:
+        data = con.execute("SELECT * FROM ID")
 
     for row in data:
         print(row)
+    
+    con.close()
+    
+def birth_date():
+    try:
+        value = parse(input('День рожденья: '))
+    except ValueError:
+        sys.exit('Пиши нормальное представление даты: ГГ-ММ-ДД')
+        
+    return value
 
 
 def add_user():
     lg.logging.info('добавление юзера')
-
+    
     db_connect()
 
     print(f'{"*" * 50}\n\tДОБАВЛЕНИЕ СОТРУДНИКА')
+    id_user = int(input('Идентификационный номер: '))
     name = input('Имя: ')
-    age = input('Возраст: ')
-    gender = input('Пол: ')
+    surname = input('Фамилия: ')
+    workplace = input('Место работы: ')
+    birthday = birth_date()
+    phonenum = int(input('Номер телефона: '))
 
-    with connection:
-        connection.execute(f"INSERT INTO USERS (NAME, AGE, GENDER) VALUES('{name}', '{age}', '{gender}')")
+    with con:
+        con.execute(f"INSERT INTO USERS (ID, NAME, SURNAME, BIRTHDAY, WORKPLACE, PHONENUM) VALUES('{id_user}', '{name}', '{surname}', '{birthday}, '{workplace}', '{phonenum}')")
 
-    connection.commit()
+    con.commit()
 
     print('Данные добавлены.')
+    
+    con.close()
 
 
 def edit_user():
@@ -96,34 +129,45 @@ def edit_user():
     print(f'{"*" * 50}\n\tРЕДАКТИРОВАНИЕ ИНФОРМАЦИИ О СОТРУДНИКЕ')
     user_id = int(input('Введите ID сотрудника для редактирования: '))
 
-    with connection:
-        data = connection.execute(f"SELECT * FROM USERS WHERE ID = {user_id}")
+    with con:
+        data = con.execute(f"SELECT * FROM USERS WHERE ID = {user_id}")
 
     for row in data:
         print(f'Данные сотрудника с ID = {user_id}:\n{row}')
         choice = str(input(
             f'\t\tЧто желаете изменить?\n'
             '\t1. Имя\n'
-            '\t2. Возраст\n'
-            '\t3. Пол\n'
+            '\t2. Фамилию\n'
+            '\t3. День рождения\n'
+            '\t4. Место работы\n'
+            '\t5. Телефоны\n'
             '\tВведите номер действия и нажмите Enter: '))
-        if choice == '1':
-            new_name = str(input('Отредактируйте имя и нажмите Enter: '))
-            connection.execute(f"UPDATE USERS SET NAME = '{new_name}' WHERE ID = '{user_id}'")
-        elif choice == '2':
-            new_age = str(input('Отредактируйте возраст и нажмите Enter: '))
-            connection.execute(f"UPDATE USERS SET AGE = '{new_age}' WHERE ID = '{user_id}'")
-        elif choice == '3':
-            new_gender = str(input('Отредактируйте пол и нажмите Enter: '))
-            connection.execute(f"UPDATE USERS SET GENDER = '{new_gender}' WHERE ID = '{user_id}'")
-        else:
-            print('Что-то пошло не так. Повторите ввод!')
+        match choice:
+            case '1':
+                new_name = str(input('Отредактируйте имя и нажмите [Enter]: '))
+                con.execute(f"UPDATE USERS SET NAME = '{new_name}' WHERE ID = '{user_id}'")
+            case '2':
+                new_surname = str(input('Отредактируйте Фамилию [Enter]: '))
+                con.execute(f"UPDATE USERS SET SURNAME = '{new_surname}' WHERE ID = '{user_id}'")
+            case '3':
+                new_birthday = str(input('Отредактируйте телефон [Enter]: '))
+                con.execute(f"UPDATE USERS SET BIRTHDAY = '{new_birthday}' WHERE ID = '{user_id}'")
+            case '4':
+                new_workplace = str(input('Отредактируйте место работы [Enter]: '))
+                con.execute(f"UPDATE USERS SET WORKPLACE = '{new_workplace}' WHERE ID = '{user_id}'")
+            case '5':
+                new_phonenum = str(input('Отредактируйте телефон [Enter]: '))
+                con.execute(f"UPDATE USERS SET PONENUM = '{new_phonenum}' WHERE ID = '{user_id}'")
+            case _:
+                print('Что-то пошло не так. Повторите ввод!')
 
-    connection.commit()
+    con.commit()
 
-    data = connection.execute(f"SELECT * FROM USERS WHERE ID = {user_id}")
+    data = con.execute(f"SELECT * FROM USERS WHERE ID = {user_id}")
     for row in data:
         print(f'Данные сотрудника с ID = {user_id}:\n{row}')
+    
+    con.close()
 
 
 def delete_user():
@@ -134,12 +178,13 @@ def delete_user():
 
     db_connect()
 
-    with connection:
-        connection.execute(f"DELETE FROM USERS WHERE ID = {user_id}")
+    with con:
+        con.execute(f"DELETE FROM USERS WHERE ID = {user_id}")
 
-    connection.commit()
+    con.commit()
 
     print(f'Сотрудник с ID={user_id} удален из базы данных.')
+    con.close()
 
 
 def delete_all():
@@ -148,7 +193,8 @@ def delete_all():
 
     db_connect()
 
-    with connection:
-        connection.execute("DELETE FROM USERS")
+    with con:
+        con.execute("DELETE FROM USERS")
 
-    connection.commit()
+    con.commit()
+    con.close()
